@@ -1,0 +1,10 @@
+.settings
+.DS_Store
+*.class
+logs/
+target/
+project/target/
+dist/
+*.iml
+.idea/
+projectFilesBackup*
