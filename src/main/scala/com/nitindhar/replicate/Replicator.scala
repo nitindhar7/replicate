@@ -1,15 +1,7 @@
 package com.nitindhar.replicate
 
-import java.util.Date
-
-import akka.actor.{ActorLogging, Actor, Props, ActorSystem}
-import akka.routing.RoundRobinRouter
-import com.nitindhar.replicate.Messages.{StartReplication, FetchData, Start, Read}
-import com.nitindhar.replicate.{ReplicateConfig, MongoReader}
-
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import scala.concurrent.duration._
+import akka.actor.{Props, ActorSystem}
+import com.nitindhar.replicate.Messages.StartReplication
 
 /**
  * Architecture
@@ -73,17 +65,7 @@ object Replicator {
 
   private lazy val ReplicateSystem = ActorSystem("ReplicateSystem")
 
-  def start = {
-    val supervisor = ReplicateSystem.actorOf(Props[ReplicationSupervisor])
-    supervisor ! StartReplication
-
-    /*
-      config.collections.foreach { c =>
-        val router = replicator.actorOf(Props([FetcherActor], c.replicationConfig).withRouter(RoundRobinRouter(nrOfInstances = c.num)), name = c.name)
-        replicator.scheduler.schedule(c.initdelay milliseconds, c.period milliseconds, router, StartReplication)
-      }
-     */
-  }
+  def start = ReplicateSystem.actorOf(Props[ReplicationSupervisor]) ! StartReplication
 
   def stop = ReplicateSystem.shutdown
 
